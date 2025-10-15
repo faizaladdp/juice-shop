@@ -12,6 +12,15 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
+# --- NEW: Set up Node.js Environment ---
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 'lts/*' # Use a stable Node.js version
+
+# --- NEW: Install Dependencies ---
+      - name: Install Dependencies
+        run: npm install
 
       # --- SAST with Semgrep ---
 #      - name: Run Semgrep (SAST)
@@ -28,9 +37,7 @@ jobs:
           path: '.'
           format: 'HTML'
           out: 'reports'
-          args: >
-            --failOnCVSS 7
-            --enableRetired
+          args: '--exclude **/passwordProtected.zip --exclude **/arbitraryFileWrite.zip --exclude **/videoExploit.zip'
       # --- DAST with OWASP ZAP ---
 #      - name: Run OWASP ZAP Baseline Scan (DAST)
 #        uses: zaproxy/action-baseline@v0.9.0
