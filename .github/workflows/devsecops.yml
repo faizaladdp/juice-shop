@@ -27,7 +27,7 @@ jobs:
       - name: Run Snyk Code Scan (SAST)
         uses: snyk/actions/node@master
         with:
-          args: code test --json-file-output=snyk-sast.json
+          args: code test ./src --json-file-output=snyk-sast.json
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
