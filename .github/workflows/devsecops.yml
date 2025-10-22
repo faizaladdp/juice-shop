@@ -1,23 +1,19 @@
-name: DevSecOps-Pipeline
-
-on:
-  push:
-    branches: [ main ]
-  workflow_dispatch:
+name: SAST Scan with SonarCloud
+on: [push, pull_request]
 
 jobs:
-  security-scan:
+  sonarcloud:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
+
+      - name: SonarCloud Scan (SAST only)
+        uses: SonarSource/sonarqube-scan-action@v5.0.0
         env:
-          SONAR_TOKEN: 83ab569fd53e464dc24fcd93ec50df562380c0ca
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
           args: >
             -Dsonar.projectKey=your-project-key
             -Dsonar.organization=your-org
-            -Dsonar.sources=src
-            -Dsonar.exclusions=**/node_modules/**,**/test/**
+            -Dsonar.sources=.
+            -Dsonar.exclusions=**/node_modules/**,**/test/**,**/frontend/**,**/data/**,**/uploads/**
