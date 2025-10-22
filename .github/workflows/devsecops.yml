@@ -10,56 +10,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
-
-      # --- Set up Node (for snyk-to-html converter) ---
-      - name: Set up Node
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-
-      # --- Install snyk-to-html (report converter) ---
-      - name: Install snyk-to-html
-        run: npm install -g snyk-to-html
-
-      # --- Run Snyk Code (SAST) ---
-      - name: Run Snyk Code Scan (SAST)
-        uses: snyk/actions/node@master
-        with:
-          args: code test ./src --json-file-output=snyk-sast.json
+      - uses: actions/checkout@v4
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
         env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-
-      # --- Convert SAST JSON → HTML ---
-      - name: Convert Snyk SAST Report
-        run: snyk-to-html -i snyk-sast.json -o snyk-sast-report.html
-
-      # --- Run Snyk Open Source (SCA) ---
-      - name: Run Snyk Dependency Scan (SCA)
-        uses: snyk/actions/node@master
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
-          args: test --json-file-output=snyk-sca.json
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-
-      # --- Convert SCA JSON → HTML ---
-      - name: Convert Snyk SCA Report
-        run: snyk-to-html -i snyk-sca.json -o snyk-sca-report.html
-
-      # --- DAST (Optional) OWASP ZAP ---
-      - name: Run OWASP ZAP Baseline Scan (DAST)
-        uses: zaproxy/action-baseline@v0.9.0
-        with:
-          target: "http://testphp.vulnweb.com"
-          cmd_options: "-r zap-report.html"
-
-      # --- Upload All Security Reports ---
-      - name: Upload Security Reports
-        uses: actions/upload-artifact@v4
-        with:
-          name: security-reports
-          path: |
-            snyk-sast-report.html
-            snyk-sca-report.html
-            zap-report.html
+          args: >
+            -Dsonar.projectKey=your-project-key
+            -Dsonar.organization=your-org
+            -Dsonar.sources=src
+            -Dsonar.exclusions=**/node_modules/**,**/test/**
