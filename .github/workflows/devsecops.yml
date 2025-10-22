@@ -10,7 +10,7 @@ jobs:
       - name: SonarCloud Scan (SAST only)
         uses: SonarSource/sonarqube-scan-action@v5.0.0
         env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_TOKEN: 83ab569fd53e464dc24fcd93ec50df562380c0ca
         with:
           args: >
             -Dsonar.projectKey=your-project-key
