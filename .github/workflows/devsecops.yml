@@ -13,7 +13,7 @@ jobs:
           SONAR_TOKEN: 83ab569fd53e464dc24fcd93ec50df562380c0ca
         with:
           args: >
-            -Dsonar.projectKey=your-project-key
-            -Dsonar.organization=your-org
+            -Dsonar.projectKey=juice-shop
+            -Dsonar.organization=faizaladdp
             -Dsonar.sources=.
             -Dsonar.exclusions=**/node_modules/**,**/test/**,**/frontend/**,**/data/**,**/uploads/**
