@@ -1,26 +1,3 @@
-name: SAST Scan with SonarCloud
-on: [push, pull_request]
-
-jobs:
-  sonarcloud:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: SonarCloud Scan (SAST only)
-        uses: SonarSource/sonarqube-scan-action@v5.0.0
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        with:
-          args: >
-            -Dsonar.projectKey=juice-shop
-            -Dsonar.organization=Mohamed Faizal
-            -Dsonar.sources=.
-            -Dsonar.exclusions=**/node_modules/**,**/test/**,**/frontend/**,**/data/**,**/uploads/**
-      - name: Clean Sonar scanner cache
-        run: rm -rf $HOME/.sonar/cache
-
-
 name: Run SonarQube with Maven
 
 on: push
@@ -37,7 +14,7 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Build with Maven cloud
-      run:  mvn -B verify sonar:sonar -Dsonar.projectKey=javareachabilityy -Dsonar.organization=javareachabilityy -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONARCLOUD_TOKEN
+      run:  mvn -B verify sonar:sonar -Dsonar.projectKey=javareachabilityy -Dsonar.organization=javareachabilityy -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN
       env:
         GIT_HUB_TOKEN: ${{ secrets.GIT_HUB_TOKEN }}
         SONARCLOUD_TOKEN: ${{ secrets.SONAR_TOKEN }}
